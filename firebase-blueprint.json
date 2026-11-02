@@ -1,0 +1,127 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Store catalog product record",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 200 },
+        "slug": { "type": "string", "maxLength": 200 },
+        "price": { "type": "number" },
+        "originalPrice": { "type": "number" },
+        "category": { "type": "string", "maxLength": 100 },
+        "shortDescription": { "type": "string", "maxLength": 500 },
+        "fullDescription": { "type": "string", "maxLength": 5000 },
+        "image": { "type": "string", "maxLength": 200000 },
+        "inStock": { "type": "boolean" },
+        "stockStatus": { "type": "string", "enum": ["in_stock", "low_stock", "out_of_stock"] },
+        "isFeatured": { "type": "boolean" },
+        "isSpecialOffer": { "type": "boolean" },
+        "sku": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "price", "category", "inStock"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Product collection category",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "slug": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["name", "slug"]
+    },
+    "StoreSettings": {
+      "title": "StoreSettings",
+      "description": "Global store and WhatsApp configuration",
+      "type": "object",
+      "properties": {
+        "storeName": { "type": "string", "maxLength": 200 },
+        "tagline": { "type": "string", "maxLength": 500 },
+        "logoText": { "type": "string", "maxLength": 50 },
+        "address": { "type": "string", "maxLength": 500 },
+        "whatsappNumber": { "type": "string", "maxLength": 50 },
+        "whatsappNumberDisplay": { "type": "string", "maxLength": 50 },
+        "contactEmail": { "type": "string", "maxLength": 100 },
+        "businessHours": { "type": "string", "maxLength": 200 },
+        "currencySymbol": { "type": "string", "maxLength": 10 },
+        "currencyCode": { "type": "string", "maxLength": 10 },
+        "deliveryNotes": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["storeName", "whatsappNumber"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer order initiated through WhatsApp or cart",
+      "type": "object",
+      "properties": {
+        "items": { "type": "array" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "contacted", "confirmed", "delivered", "cancelled"] },
+        "customerName": { "type": "string", "maxLength": 200 },
+        "customerPhone": { "type": "string", "maxLength": 50 },
+        "deliveryAddress": { "type": "string", "maxLength": 500 },
+        "orderType": { "type": "string", "maxLength": 50 },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["items", "totalAmount", "status", "createdAt"]
+    },
+    "Inquiry": {
+      "title": "Inquiry",
+      "description": "Customer inquiry message or chat",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "topic": { "type": "string", "maxLength": 150 },
+        "message": { "type": "string", "maxLength": 2000 },
+        "source": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "enum": ["new", "replied", "closed"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["message", "createdAt"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile record",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 150 },
+        "name": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string", "enum": ["admin", "customer"] },
+        "phone": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["email", "name", "role"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Catalog products collection"
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Store categories collection"
+    },
+    "/settings/{settingsId}": {
+      "schema": { "$ref": "#/entities/StoreSettings" },
+      "description": "Store general settings document"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Orders collection"
+    },
+    "/inquiries/{inquiryId}": {
+      "schema": { "$ref": "#/entities/Inquiry" },
+      "description": "Customer inquiries and chat messages collection"
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles collection"
+    }
+  }
+}

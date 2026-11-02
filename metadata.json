@@ -1,0 +1,7 @@
+{
+  "name": "Aura Lifestyle - WhatsApp E-Commerce Catalog",
+  "description": "Modern, premium WhatsApp-based e-commerce product catalog with seamless direct WhatsApp ordering and simple admin dashboard in BDT.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

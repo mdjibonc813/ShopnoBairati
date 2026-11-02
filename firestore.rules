@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.email.lower() == 'mdjibonc813@gmail.com' ||
+        request.auth.token.email.lower() == 'admin@store.com'
+      );
+    }
+
+    // Public catalog collections: read is open to all visitors
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /settings/{settingsId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Orders: Customers can submit orders; admin can view/manage
+    match /orders/{orderId} {
+      allow read: if true;
+      allow create: if incoming().totalAmount is number 
+                    && incoming().status is string;
+      allow update, delete: if true;
+    }
+
+    // Inquiries: Customers can send chat and contact inquiries; admin can view/manage
+    match /inquiries/{inquiryId} {
+      allow read: if true;
+      allow create: if incoming().message is string 
+                    && incoming().message.size() > 0 
+                    && incoming().message.size() <= 3000;
+      allow update, delete: if true;
+    }
+
+    // Users: Profiles for registered customers and admins
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+  }
+}
